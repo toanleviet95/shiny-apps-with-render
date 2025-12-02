@@ -20,7 +20,7 @@ services:
     runtime: docker
     dockerfilePath: ./apps/example/Dockerfile
     dockerContext: ./apps/example
-    plan: starter
+    plan: hobby
     healthCheckPath: /
     envVars:
       - key: PORT
@@ -32,7 +32,7 @@ services:
     runtime: docker
     dockerfilePath: ./apps/dice/Dockerfile
     dockerContext: ./apps/dice
-    plan: starter
+    plan: hobby
     healthCheckPath: /
     envVars:
       - key: PORT
