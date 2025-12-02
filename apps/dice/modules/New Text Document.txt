@@ -1,0 +1,402 @@
+library(shiny)
+library(ggplot2)
+library(dplyr)
+library(shinydashboard)
+
+# UI
+ui <- fluidPage(
+  titlePanel("Mô phỏng Tung 2 Xúc Xắc"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      width = 2,
+      
+      
+      # Nút tung một lần
+      actionButton("roll_once", "TUNG XÚC XẮC", 
+                   style = "color: white; background-color: #28a745; font-weight: bold; padding: 8px; width: 100%;"),
+      br(),
+      
+      h5("Tung nhiều lần"),
+      # Ô nhập số lần tung
+      numericInput("num_rolls", "Số lần tung:", 
+                   value = 1, min = 1, max = 1000, step = 1,
+                   width = "100%"),
+      
+      # Nút tung nhiều lần
+      actionButton("roll_multiple", "TUNG NHIỀU LẦN", 
+                   style = "color: white; background-color: #007bff; font-weight: bold; padding: 8px; width: 100%;"),
+      br(), br(),
+      
+      # Nút reset
+      actionButton("reset", "RESET", 
+                   style = "color: white; background-color: #dc3545; font-weight: bold; padding: 8px; width: 100%;"),
+      br()
+    ),
+    
+    mainPanel(
+      width = 10,
+      # 5 Value Box hàng ngang
+      fluidRow(
+        column(2,
+               wellPanel(
+                 style = "background-color: #f8f9fa; text-align: center; padding: 10px;",
+                 h5("Tổng số chấm"),
+                 h3(style = "color: #007bff;", textOutput("current_sum_value"))
+               )
+        ),
+        column(2,
+               wellPanel(
+                 style = "background-color: #f8f9fa; text-align: center; padding: 10px;",
+                 h5("Số lần đã tung"),
+                 h3(style = "color: #28a745;", textOutput("total_rolls"))
+               )
+        ),
+        column(2,
+               wellPanel(
+                 style = "background-color: #f8f9fa; text-align: center; padding: 10px;",
+                 h5("Tổng điểm nhỏ nhất"),
+                 h3(style = "color: #ffc107;", textOutput("min_sum"))
+               )
+        ),
+        column(2,
+               wellPanel(
+                 style = "background-color: #f8f9fa; text-align: center; padding: 10px;",
+                 h5("Tổng điểm lớn nhất"),
+                 h3(style = "color: #fd7e14;", textOutput("max_sum"))
+               )
+        ),
+        column(2,
+               wellPanel(
+                 style = "background-color: #f8f9fa; text-align: center; padding: 10px;",
+                 h5("Tổng điểm xuất hiện nhiều nhất"),
+                 h3(style = "color: #e83e8c;", textOutput("mode_sum"))
+               )
+        )
+      ),
+      br(),
+      
+      # Bảng thống kê tần suất và Biểu đồ xác suất
+      # Hiển thị hình ảnh xúc xắc
+      fluidRow(
+        column(6, 
+               imageOutput("dice1", height = "200px")
+        ),
+        column(6,
+               imageOutput("dice2", height = "200px")
+        )
+      ),
+      br(),
+      fluidRow(
+        column(3,
+               h4("Bảng thống kê tần suất tổng điểm"),
+               tableOutput("frequency_table")
+        ),
+        column(9,
+               h4("Biểu đồ xác suất tổng số chấm"),
+               plotOutput("probability_plot", height = "500px")
+        )
+      ),
+      br(),
+      
+      # Lịch sử kết quả
+      fluidRow(
+        column(12,
+               h4("Lịch sử kết quả (10 lần gần nhất)"),
+               tableOutput("recent_history_table"),
+               br(),
+               downloadButton("download_data", "Tải xuống toàn bộ dữ liệu",
+                              style = "color: white; background-color: #17a2b8; font-weight: bold;")
+        )
+      )
+    )
+  )
+)
+
+# Server
+server <- function(input, output, session) {
+  
+  # Tạo reactive values để lưu trữ kết quả
+  values <- reactiveValues(
+    dice1 = 1,
+    dice2 = 1,
+    history = data.frame(
+      Lần = integer(),
+      Xúc_xắc_1 = integer(),
+      Xúc_xắc_2 = integer(),
+      Tổng = integer(),
+      stringsAsFactors = FALSE
+    ),
+    roll_count = 0
+  )
+  
+  # Hàm tung xúc xắc
+  roll_dice <- function() {
+    sample(1:6, 1)
+  }
+  
+  # Hàm thêm kết quả vào lịch sử
+  add_to_history <- function(dice1, dice2) {
+    values$roll_count <- values$roll_count + 1
+    new_row <- data.frame(
+      Lần = values$roll_count,
+      Xúc_xắc_1 = dice1,
+      Xúc_xắc_2 = dice2,
+      Tổng = dice1 + dice2
+    )
+    values$history <- rbind(values$history, new_row)
+  }
+  
+  # Xử lý sự kiện khi nhấn nút tung 1 lần
+  observeEvent(input$roll_once, {
+    values$dice1 <- roll_dice()
+    values$dice2 <- roll_dice()
+    add_to_history(values$dice1, values$dice2)
+  })
+  
+  # Xử lý sự kiện khi nhấn nút tung nhiều lần
+  observeEvent(input$roll_multiple, {
+    num_rolls <- input$num_rolls
+    
+    if (num_rolls > 0) {
+      # Hiển thị thông báo
+      showModal(modalDialog(
+        title = "Đang tung xúc xắc...",
+        paste("Đang thực hiện", num_rolls, "lần tung"),
+        footer = NULL
+      ))
+      
+      # Thực hiện nhiều lần tung
+      for (i in 1:num_rolls) {
+        dice1 <- roll_dice()
+        dice2 <- roll_dice()
+        add_to_history(dice1, dice2)
+      }
+      
+      # Cập nhật kết quả hiện tại với lần tung cuối cùng
+      values$dice1 <- dice1
+      values$dice2 <- dice2
+      
+      # Đóng thông báo
+      removeModal()
+      
+      # Hiển thị thông báo hoàn thành
+      showNotification(
+        paste("Đã hoàn thành", num_rolls, "lần tung!"),
+        type = "message",
+        duration = 3
+      )
+    }
+  })
+  
+  # Xử lý sự kiện reset
+  observeEvent(input$reset, {
+    values$dice1 <- 1
+    values$dice2 <- 1
+    values$history <- data.frame(
+      Lần = integer(),
+      Xúc_xắc_1 = integer(),
+      Xúc_xắc_2 = integer(),
+      Tổng = integer(),
+      stringsAsFactors = FALSE
+    )
+    values$roll_count <- 0
+    
+    showNotification("Đã reset tất cả dữ liệu!", type = "warning", duration = 3)
+  })
+  
+  # Hiển thị hình ảnh xúc xắc 1
+  output$dice1 <- renderImage({
+    outfile <- tempfile(fileext = '.png')
+    
+    png(outfile, width = 150, height = 150)
+    par(mar = c(0,0,0,0))
+    plot(0, 0, type = "n", xlim = c(0, 1), ylim = c(0, 1), 
+         xlab = "", ylab = "", axes = FALSE)
+    
+    # Vẽ hình vuông đại diện cho xúc xắc
+    rect(0.1, 0.1, 0.9, 0.9, col = "white", border = "black", lwd = 2)
+    
+    # Vẽ các chấm dựa trên giá trị xúc xắc
+    dots <- list(
+      `1` = list(c(0.5, 0.5)),
+      `2` = list(c(0.25, 0.75), c(0.75, 0.25)),
+      `3` = list(c(0.25, 0.75), c(0.5, 0.5), c(0.75, 0.25)),
+      `4` = list(c(0.25, 0.75), c(0.75, 0.75), c(0.25, 0.25), c(0.75, 0.25)),
+      `5` = list(c(0.25, 0.75), c(0.75, 0.75), c(0.5, 0.5), 
+                 c(0.25, 0.25), c(0.75, 0.25)),
+      `6` = list(c(0.25, 0.75), c(0.75, 0.75), c(0.25, 0.5), 
+                 c(0.75, 0.5), c(0.25, 0.25), c(0.75, 0.25))
+    )
+    
+    for(dot in dots[[as.character(values$dice1)]]) {
+      points(dot[1], dot[2], pch = 19, cex = 2, col = "black")
+    }
+    
+    dev.off()
+    
+    list(src = outfile,
+         contentType = 'image/png',
+         width = 150,
+         height = 150,
+         alt = paste("Xúc xắc 1:", values$dice1))
+  }, deleteFile = TRUE)
+  
+  # Hiển thị hình ảnh xúc xắc 2
+  output$dice2 <- renderImage({
+    outfile <- tempfile(fileext = '.png')
+    
+    png(outfile, width = 150, height = 150)
+    par(mar = c(0,0,0,0))
+    plot(0, 0, type = "n", xlim = c(0, 1), ylim = c(0, 1), 
+         xlab = "", ylab = "", axes = FALSE)
+    
+    rect(0.1, 0.1, 0.9, 0.9, col = "white", border = "black", lwd = 2)
+    
+    dots <- list(
+      `1` = list(c(0.5, 0.5)),
+      `2` = list(c(0.25, 0.75), c(0.75, 0.25)),
+      `3` = list(c(0.25, 0.75), c(0.5, 0.5), c(0.75, 0.25)),
+      `4` = list(c(0.25, 0.75), c(0.75, 0.75), c(0.25, 0.25), c(0.75, 0.25)),
+      `5` = list(c(0.25, 0.75), c(0.75, 0.75), c(0.5, 0.5), 
+                 c(0.25, 0.25), c(0.75, 0.25)),
+      `6` = list(c(0.25, 0.75), c(0.75, 0.75), c(0.25, 0.5), 
+                 c(0.75, 0.5), c(0.25, 0.25), c(0.75, 0.25))
+    )
+    
+    for(dot in dots[[as.character(values$dice2)]]) {
+      points(dot[1], dot[2], pch = 19, cex = 2, col = "black")
+    }
+    
+    dev.off()
+    
+    list(src = outfile,
+         contentType = 'image/png',
+         width = 100,
+         height = 100,
+         alt = paste("Xúc xắc 2:", values$dice2))
+  }, deleteFile = TRUE)
+  
+  # Value Box: Tổng số chấm hiện tại
+  output$current_sum_value <- renderText({
+    as.character(values$dice1 + values$dice2)
+  })
+  
+  # Value Box: Số lần đã tung
+  output$total_rolls <- renderText({
+    as.character(nrow(values$history))
+  })
+  
+  # Value Box: Tổng nhỏ nhất
+  output$min_sum <- renderText({
+    if(nrow(values$history) > 0) {
+      as.character(min(values$history$Tổng))
+    } else {
+      "0"
+    }
+  })
+  
+  # Value Box: Tổng lớn nhất
+  output$max_sum <- renderText({
+    if(nrow(values$history) > 0) {
+      as.character(max(values$history$Tổng))
+    } else {
+      "0"
+    }
+  })
+  
+  # Value Box: Tổng xuất hiện nhiều nhất
+  output$mode_sum <- renderText({
+    if(nrow(values$history) > 0) {
+      freq_table <- table(values$history$Tổng)
+      mode_value <- as.numeric(names(freq_table)[which.max(freq_table)])
+      as.character(mode_value)
+    } else {
+      "0"
+    }
+  })
+  
+  # Vẽ biểu đồ xác suất
+  output$probability_plot <- renderPlot({
+    theoretical_probs <- data.frame(
+      Total = 2:12,
+      Probability = c(1/36, 2/36, 3/36, 4/36, 5/36, 6/36, 5/36, 4/36, 3/36, 2/36, 1/36)
+    )
+    
+    if(nrow(values$history) > 0) {
+      actual_probs <- values$history %>%
+        group_by(Tổng) %>%
+        summarise(Count = n(), .groups = 'drop') %>%
+        mutate(Probability = Count / sum(Count))
+      
+      plot_data <- theoretical_probs %>%
+        left_join(actual_probs, by = c("Total" = "Tổng")) %>%
+        rename(Theoretical = Probability.x,
+               Actual = Probability.y) %>%
+        mutate(Actual = ifelse(is.na(Actual), 0, Actual))
+      
+      ggplot(plot_data, aes(x = Total)) +
+        geom_col(aes(y = Theoretical, fill = "Lý thuyết"), 
+                 alpha = 0.6, position = position_dodge(0.8), width = 0.7) +
+        geom_col(aes(y = Actual, fill = "Thực tế"), 
+                 alpha = 0.6, position = position_dodge(0.8), width = 0.7) +
+        scale_fill_manual(values = c("Lý thuyết" = "blue", "Thực tế" = "red")) +
+        labs(title = NULL,
+             x = "Tổng số chấm",
+             y = "Xác suất",
+             fill = "Loại") +
+        theme_minimal() +
+        scale_x_continuous(breaks = 2:12) +
+        theme(legend.position = "bottom")
+    } else {
+      ggplot(theoretical_probs, aes(x = Total, y = Probability)) +
+        geom_col(fill = "blue", alpha = 0.6) +
+        labs(title = NULL,
+             x = "Tổng số chấm",
+             y = "Xác suất") +
+        theme_minimal() +
+        scale_x_continuous(breaks = 2:12)
+    }
+  })
+  
+  # Hiển thị bảng tần suất tổng điểm
+  output$frequency_table <- renderTable({
+    if(nrow(values$history) > 0) {
+      freq_table <- values$history %>%
+        group_by(Tổng_điểm = Tổng) %>%
+        summarise(
+          Tần_suất = n(),
+          Tỷ_lệ = paste0(round(n() / nrow(values$history) * 100, 1), "%")
+        ) %>%
+        arrange(Tổng_điểm)
+      
+      total_row <- data.frame(
+        Tổng_điểm = "TỔNG CỘNG",
+        Tần_suất = nrow(values$history),
+        Tỷ_lệ = "100%"
+      )
+      
+      rbind(freq_table, total_row)
+    }
+  }, bordered = TRUE, align = 'c', width = "100%")
+  
+  # Hiển thị lịch sử gần nhất (10 lần)
+  output$recent_history_table <- renderTable({
+    if(nrow(values$history) > 0) {
+      tail(values$history, 10)
+    }
+  }, bordered = TRUE, width = "100%")
+  
+  # Tải xuống dữ liệu
+  output$download_data <- downloadHandler(
+    filename = function() {
+      paste("dice_roll_data_", Sys.Date(), ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(values$history, file, row.names = FALSE)
+    }
+  )
+}
+
+# Chạy ứng dụng
+shinyApp(ui = ui, server = server)

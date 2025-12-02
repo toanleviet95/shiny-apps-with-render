@@ -1,0 +1,36 @@
+version: "3.7"
+
+services:
+  example:
+    build: ./apps/example
+    platform: linux/amd64
+    restart: always
+    expose:
+      - "3838"
+  dice:
+    build: ./apps/dice
+    platform: linux/amd64
+    restart: always
+    expose:
+      - "3839"
+  caddy:
+    image: caddy:2.3.0-alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - $PWD/site:/srv
+      - $PWD/log:/var/log/caddy
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - example
+      - dice
+    environment:
+      - HOST=":80"
+      - EMAIL="dothidieule@gmail.com"
+volumes:
+  caddy_data:
+  caddy_config:

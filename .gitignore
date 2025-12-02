@@ -1,0 +1,27 @@
+# R environment
+.Rhistory
+.Rdata
+.Rproj.user/
+.Rprofile
+.httr-oauth
+.DS_Store # macOS specific
+Thumbs.db # Windows specific
+
+# R packages
+*.Rcheck/
+*-vignettes/
+build/
+cran-comments.md
+inst/doc/
+
+# Shiny specific
+rsconnect/
+data/ # If you have large or sensitive data that is not meant for version control
+www/ # If you have dynamically generated content in www/ that should not be tracked
+log/ # Log files
+
+# IDE specific files
+.vscode/ # VS Code workspace files
+.Rprofile # RStudio specific, potentially
+
+.DS_Store

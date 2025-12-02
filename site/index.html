@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staviz - Interactive Statistics Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" href="./assets/home.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Floating Background Elements -->
+        <div class="floating-elements">
+            <div v-for="(shape, index) in floatingShapes" 
+                 :key="index"
+                 class="floating-shape" 
+                 :style="{ left: shape.left, animationDelay: shape.delay }">
+                {{ shape.emoji }}
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="logo" @click="navigateTo('home')">
+                <div class="logo-icon">📊</div>
+                Staviz
+            </div>
+            <nav class="nav-menu">
+                <div v-for="item in navItems" 
+                     :key="item.name" 
+                     class="nav-item"
+                     @click="navigateTo(item.route)">
+                    <span class="nav-icon">{{ item.icon }}</span>
+                    <span>{{ item.name }}</span>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Notification -->
+        <transition name="fade">
+            <div v-if="notification" class="notification">
+                {{ notification }}
+            </div>
+        </transition>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-badge">✨ Interactive Statistical Learning Platform</div>
+                <h1 class="hero-title">Master Statistics Through Visualization</h1>
+                <p class="hero-subtitle">
+                    Discover the power of statistical concepts through interactive tools, 
+                    real-time visualizations, and hands-on exploration
+                </p>
+                
+                <div class="hero-stats">
+                    <div v-for="stat in stats" :key="stat.label" class="stat-item">
+                        <span class="stat-tag">{{ stat.icon }}</span>
+                        <span class="stat-label">{{ stat.label }}</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Grid -->
+        <section class="features-container">
+            <div class="features-grid">
+                <div v-for="feature in features" 
+                     :key="feature.id"
+                     :class="['feature-card', feature.class]"
+                     @click="navigateToFeature(feature.id)">
+                    <div class="card-header">
+                        <div class="card-icon">{{ feature.icon }}</div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">{{ feature.title }}</h3>
+                        <p class="card-description">{{ feature.description }}</p>
+                        
+                        <!-- Dice Demo -->
+                        <div v-if="feature.id === 'dice'" class="card-demo">
+                            <div class="dice-display">
+                                <div v-for="(die, index) in demoDice" 
+                                     :key="index"
+                                     :class="['dice', { 'roll-animation': isRollingDice }]">
+                                    {{ die }}
+                                </div>
+                            </div>
+                            <button class="demo-button" @click.stop="rollDemoDice">Roll</button>
+                        </div>
+
+                        <!-- Card Demo -->
+                        <div v-else-if="feature.id === 'cards'" class="card-demo">
+                            <div style="display: flex; gap: 10px;">
+                                <div :class="['card-small', { 'flip-animation': isFlippingCard }]">
+                                    <div>{{ demoCard.value }}</div>
+                                    <div :class="demoCard.suitClass">{{ demoCard.suit }}</div>
+                                </div>
+                            </div>
+                            <button class="demo-button" @click.stop="drawDemoCard">Draw</button>
+                        </div>
+
+                        <!-- Other Features Demo -->
+                        <div v-else class="card-demo">
+                            <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">
+                                {{ feature.demoText }}
+                            </div>
+                            <button class="demo-button">{{ feature.buttonText }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="./assets/home.js" defer></script>
+</body>
+</html>

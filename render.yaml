@@ -1,0 +1,134 @@
+services:
+  # Main Static Site
+  - type: static
+    name: statsapps-home
+    buildCommand: echo "No build needed"
+    staticPublishPath: ./site
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-store
+
+  # Example Shiny App
+  - type: web
+    name: statsapps-example
+    runtime: docker
+    dockerfilePath: ./apps/example/Dockerfile
+    dockerContext: ./apps/example
+    plan: starter
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 3838
+
+  # Dice Shiny App
+  - type: web
+    name: statsapps-dice
+    runtime: docker
+    dockerfilePath: ./apps/dice/Dockerfile
+    dockerContext: ./apps/dice
+    plan: starter
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 3839
+
+  # Intro App
+  # - type: web
+  #   name: statsapps-intro
+  #   runtime: docker
+  #   dockerfilePath: ./apps/intro/Dockerfile
+  #   dockerContext: ./apps/intro
+  #   plan: starter
+  #   healthCheckPath: /
+  #   envVars:
+  #     - key: PORT
+  #       value: 3838
+
+  # Categorical App
+  # - type: web
+  #   name: statsapps-categorical
+  #   runtime: docker
+  #   dockerfilePath: ./apps/categorical/Dockerfile
+  #   dockerContext: ./apps/categorical
+  #   plan: starter
+  #   healthCheckPath: /
+  #   envVars:
+  #     - key: PORT
+  #       value: 3838
+
+  # Histogram App
+  # - type: web
+  #   name: statsapps-histogram
+  #   runtime: docker
+  #   dockerfilePath: ./apps/histogram/Dockerfile
+  #   dockerContext: ./apps/histogram
+  #   plan: starter
+  #   healthCheckPath: /
+  #   envVars:
+  #     - key: PORT
+  #       value: 3838
+
+  # Means App
+  # - type: web
+  #   name: statsapps-means
+  #   runtime: docker
+  #   dockerfilePath: ./apps/means/Dockerfile
+  #   dockerContext: ./apps/means
+  #   plan: starter
+  #   healthCheckPath: /
+  #   envVars:
+  #     - key: PORT
+  #       value: 3838
+
+  # Probability Function App
+  # - type: web
+  #   name: statsapps-prob-function
+  #   runtime: docker
+  #   dockerfilePath: ./apps/prob_function/Dockerfile
+  #   dockerContext: ./apps/prob_function
+  #   plan: starter
+  #   healthCheckPath: /
+  #   envVars:
+  #     - key: PORT
+  #       value: 3838
+
+  # Probability Coin App
+  # - type: web
+  #   name: statsapps-probability-coin
+  #   runtime: docker
+  #   dockerfilePath: ./apps/probability_coin/Dockerfile
+  #   dockerContext: ./apps/probability_coin
+  #   plan: starter
+  #   healthCheckPath: /
+  #   envVars:
+  #     - key: PORT
+  #       value: 3838
+
+  # Probability Dices App
+  # - type: web
+  #   name: statsapps-probability-dices
+  #   runtime: docker
+  #   dockerfilePath: ./apps/probability_dices/Dockerfile
+  #   dockerContext: ./apps/probability_dices
+  #   plan: starter
+  #   healthCheckPath: /
+  #   envVars:
+  #     - key: PORT
+  #       value: 3838
+
+  # Proportion App
+  # - type: web
+  #   name: statsapps-proportion
+  #   runtime: docker
+  #   dockerfilePath: ./apps/proportion/Dockerfile
+  #   dockerContext: ./apps/proportion
+  #   plan: starter
+  #   healthCheckPath: /
+  #   envVars:
+  #     - key: PORT
+  #       value: 3838

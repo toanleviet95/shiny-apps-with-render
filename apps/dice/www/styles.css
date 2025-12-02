@@ -1,0 +1,186 @@
+/* Đổi màu header */
+.skin-blue .main-header .navbar {
+  background-color: #003f88 !important;
+}
+
+.skin-blue .main-header .logo {
+  background-color: white !important;
+}
+
+.skin-blue .main-header .logo:hover {
+  background-color: white !important;
+}
+
+/* Toàn bộ app dùng Arial */
+body, .content-wrapper, .main-sidebar, .main-header {
+  font-family: Arial, sans-serif;
+}
+
+
+.main-header .navbar .header-rop-text {
+    /* Đặt ROP sát về bên trái trong thanh navbar */
+    float: left !important; 
+    
+    /* Xóa các quy tắc căn giữa nếu đã từng thêm */
+    margin: 0; 
+    
+    /* Định dạng chữ màu trắng */
+    color: white; 
+    font-size: 16px;
+    font-weight: 500;
+    
+    /* Điều chỉnh lề để tách khỏi nút 3 gạch */
+    margin-left: 15px; 
+    line-height: 50px; /* Vẫn căn giữa theo chiều dọc */
+}
+
+.box .box-header {
+  padding: 3px 10px !important;
+  margin-bottom: 1 !important;
+}
+
+.btn-custom {
+  font-size: 14px;
+  padding: 5px 15px;
+  margin: 0 5px; /* Khoảng cách giữa các nút */
+}
+
+.btn-custom {
+  font-size: 12px;
+  padding: 5px 15px;
+  margin: 0;
+}
+
+.btn-primary {
+  background-color: #007bff; /* Màu xanh dương */
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+.btn-danger {
+  background-color: #dc3545; /* Màu đỏ */
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.btn-warning {
+  background-color: #ffc107; /* Màu vàng */
+  border-color: #ffc107;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+}
+
+td.readonly {
+  background-color: white !important; /* Màu nền tùy chỉnh */
+  pointer-events: none; /* Ngăn chặn sự tương tác */
+  opacity: 1; /* Không làm mờ ô */
+}
+
+.disabled-button {
+  background-color: #e0e0e0;  /* Màu xám khi nút bị vô hiệu hóa */
+    border-color: #e0e0e0;
+    color: #b0b0b0;  /* Màu chữ xám */
+    cursor: not-allowed;  /* Thay đổi con trỏ khi nút không bấm được */
+}
+
+
+
+/* Thay đổi màu header */
+.skin-red .main-header .navbar {
+  background-color: #e31837 !important;
+}
+.skin-red .main-header .logo {
+  background-color: #e31837 !important;
+  color: white !important;
+  font-weight: bold;
+}
+.skin-red .main-header .logo:hover {
+  background-color: #c2152d !important;
+}
+/* Thay đổi màu sidebar */
+.skin-red .main-sidebar {
+  background-color: #102247 !important;
+}
+.skin-red .main-sidebar .sidebar .sidebar-menu a {
+  color: white !important;
+}
+.skin-red .main-sidebar .sidebar .sidebar-menu a:hover {
+  background-color: #0a1835 !important;
+}
+.skin-red .main-sidebar .sidebar .sidebar-menu .active a {
+  background-color: #0a1835 !important;
+  color: white !important;
+}
+
+
+
+.btn-custom-save-button {
+  font-size: 12px;
+  padding: 8px 15px;
+  border-radius: 5px;
+}
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: white;
+}
+.btn-warning {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: black;
+}
+.btn-orange {
+  background-color: #fd7e14;
+  border-color: #fd7e14;
+  color: white;
+}
+
+#upload_file {
+  background-color: #ffc107;
+  border-radius: 5px;
+  color: black;
+  border: 1px solid #ffc107;
+}
+
+
+.tab-content {
+  max-height: auto; /* Giới hạn chiều cao */
+  overflow-y: auto; /* Thêm thanh cuộn */
+  overflow-x: hidden; /* Loại bỏ thanh cuộn ngang */
+}
+.dataTables_wrapper {
+  max-height: auto; /* Giới hạn chiều cao của bảng */
+  overflow-y: auto; /* Thêm thanh cuộn dọc */
+  overflow-x: hidden; /* Loại bỏ thanh cuộn ngang */
+}
+.dataTables_scrollHead {
+  z-index: 10;
+}
+.dataTables_scrollBody {
+  overflow-x: auto;
+}
+.disabled-button {
+  background-color: #e0e0e0;  /* Màu xám khi nút bị vô hiệu hóa */
+  border-color: #e0e0e0;
+  color: #b0b0b0;  /* Màu chữ xám */
+  cursor: not-allowed;  /* Thay đổi con trỏ khi nút không bấm được */
+}
+	
