@@ -1,7 +1,7 @@
 services:
   # Main Static Site
   - type: web
-    name: statsapps-home
+    name: stavizapps-home
     runtime: static
     buildCommand: echo "No build needed"
     staticPublishPath: ./site
@@ -16,7 +16,7 @@ services:
 
   # Example Shiny App
   - type: web
-    name: statsapps-example
+    name: stavizapps-example
     runtime: docker
     dockerfilePath: ./apps/example/Dockerfile
     dockerContext: ./apps/example
@@ -28,7 +28,7 @@ services:
 
   # Dice Shiny App
   - type: web
-    name: statsapps-dice
+    name: stavizapps-dice
     runtime: docker
     dockerfilePath: ./apps/dice/Dockerfile
     dockerContext: ./apps/dice
