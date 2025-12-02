@@ -1,3 +1,7 @@
+window.APP_ENV = window.location.hostname === 'stavizapps-home.onrender.com' ? 'PRODUCTION' : 'DEVELOPMENT';
+
+const isProduction = window.APP_ENV === 'PRODUCTION';
+
 const floatingShapes = [
   { emoji: '📊', left: '10%', delay: '0s' },
   { emoji: '🎲', left: '30%', delay: '3s' },
@@ -24,7 +28,7 @@ const stats = [
 const apps = [
   {
     id: 'dice',
-    path: '/dice/',
+    path: isProduction ? 'https://stavizapps-dice.onrender.com' : '/dice/',
     class: 'dice-card',
     icon: '🎲',
     title: 'Dice Roll Simulator',
@@ -34,7 +38,7 @@ const apps = [
   },
   {
     id: 'cards',
-    path: '/example/',
+    path: isProduction ? 'https://stavizapps-example.onrender.com' : '/example/',
     class: 'cards-card',
     icon: '🃏',
     title: 'Random Card Generator',
@@ -44,7 +48,7 @@ const apps = [
   },
   {
     id: 'distributions',
-    path: '/example/',
+    path: isProduction ? 'https://stavizapps-example.onrender.com' : '/example/',,
     class: 'distributions-card',
     icon: '📊',
     title: 'Probability Distributions',
@@ -54,7 +58,7 @@ const apps = [
   },
   {
     id: 'hypothesis',
-    path: '/example/',
+    path: isProduction ? 'https://stavizapps-example.onrender.com' : '/example/',,
     class: 'hypothesis-card',
     icon: '🔬',
     title: 'Hypothesis Testing',
@@ -64,7 +68,7 @@ const apps = [
   },
   {
     id: 'regression',
-    path: '/example/',
+    path: isProduction ? 'https://stavizapps-example.onrender.com' : '/example/',,
     class: 'regression-card',
     icon: '📈',
     title: 'Regression Analysis',
@@ -74,7 +78,7 @@ const apps = [
   },
   {
     id: 'timeseries',
-    path: '/example/',
+    path: isProduction ? 'https://stavizapps-example.onrender.com' : '/example/',,
     class: 'timeseries-card',
     icon: '⏱️',
     title: 'Time Series Analysis',
