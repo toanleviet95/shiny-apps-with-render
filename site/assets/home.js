@@ -48,7 +48,7 @@ const apps = [
   },
   {
     id: 'distributions',
-    path: isProduction ? 'https://stavizapps-example.onrender.com' : '/example/',,
+    path: isProduction ? 'https://stavizapps-example.onrender.com' : '/example/',
     class: 'distributions-card',
     icon: '📊',
     title: 'Probability Distributions',
@@ -58,7 +58,7 @@ const apps = [
   },
   {
     id: 'hypothesis',
-    path: isProduction ? 'https://stavizapps-example.onrender.com' : '/example/',,
+    path: isProduction ? 'https://stavizapps-example.onrender.com' : '/example/',
     class: 'hypothesis-card',
     icon: '🔬',
     title: 'Hypothesis Testing',
@@ -68,7 +68,7 @@ const apps = [
   },
   {
     id: 'regression',
-    path: isProduction ? 'https://stavizapps-example.onrender.com' : '/example/',,
+    path: isProduction ? 'https://stavizapps-example.onrender.com' : '/example/',
     class: 'regression-card',
     icon: '📈',
     title: 'Regression Analysis',
@@ -78,7 +78,7 @@ const apps = [
   },
   {
     id: 'timeseries',
-    path: isProduction ? 'https://stavizapps-example.onrender.com' : '/example/',,
+    path: isProduction ? 'https://stavizapps-example.onrender.com' : '/example/',
     class: 'timeseries-card',
     icon: '⏱️',
     title: 'Time Series Analysis',
